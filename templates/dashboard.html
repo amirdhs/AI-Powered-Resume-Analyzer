@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-4">Welcome, {{ name }}!</h2>
+    <h3 class="mb-3">Upload Your Resume</h3>
+    <form method="POST" action="{{ url_for('dashboard') }}">
+        <div class="mb-3">
+            <textarea class="form-control" name="resume" rows="5" placeholder="Paste your resume here..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload Resume</button>
+    </form>
+
+    <h3 class="mt-5 mb-3">Your Resumes</h3>
+    {% if resumes %}
+        <ul class="list-group">
+            {% for resume in resumes %}
+                <li class="list-group-item">{{ resume.resume }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No resumes uploaded yet.</p>
+    {% endif %}
+    <div class="mt-4">
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    </div>
+</div>
+{% endblock %}
