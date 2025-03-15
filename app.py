@@ -1,15 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
-import bcrypt  # Use bcrypt for password hashing
+import bcrypt
 
 app = Flask(__name__)
 
-# Update the SQLALCHEMY_DATABASE_URI to use PostgreSQL
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:4181@localhost/resumeanalyzer'
 app.config['SECRET_KEY'] = 'thisissecretkey'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# Models
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -34,6 +35,7 @@ class Resume(db.Model):
         self.user_id = user_id
         self.resume = resume
 
+# Routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -104,6 +106,9 @@ def logout():
     flash('You have been logged out', 'success')
     return redirect(url_for('index'))
 
+
+
+# Run the app
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
