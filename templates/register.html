@@ -5,7 +5,7 @@
     <h2 class="text-center mb-4">Register</h2>
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form method="POST" action="{{ url_for('register') }}">
+            <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" class="form-control" id="name" name="name" required>
