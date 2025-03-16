@@ -12,6 +12,9 @@ load_dotenv()
 # Get the API key from environment variables
 api_key = os.getenv("API_KEY")
 
+if not api_key:
+    raise ValueError("API key not found. Please set the API_KEY environment variable.")
+
 
 # Function to extract text from PDF
 def extract_text_from_pdf(pdf_path):
