@@ -1,0 +1,164 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Resume Analyzer API",
+    "version": "1.0.0",
+    "description": "API for analyzing resumes and providing feedback."
+  },
+  "paths": {
+    "/register": {
+      "post": {
+        "summary": "Register a new user",
+        "description": "Allows a new user to register with their name, email, and password.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Login a user",
+        "description": "Allows a user to login with their email and password.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User logged in successfully"
+          },
+          "400": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "User dashboard",
+        "description": "Displays the user's dashboard with options to upload and analyze resumes.",
+        "responses": {
+          "200": {
+            "description": "Dashboard displayed successfully"
+          },
+          "401": {
+            "description": "User not logged in"
+          }
+        }
+      },
+      "post": {
+        "summary": "Upload and analyze resume",
+        "description": "Allows the user to upload a resume and get feedback.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "resume": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": ["resume"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resume analyzed successfully"
+          },
+          "400": {
+            "description": "Invalid file type or no file uploaded"
+          }
+        }
+      }
+    },
+    "/delete_resume/{resume_id}": {
+      "delete": {
+        "summary": "Delete a resume",
+        "description": "Deletes a specific resume by its ID. The user must be logged in to perform this action.",
+        "parameters": [
+          {
+            "name": "resume_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the resume to delete.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resume deleted successfully"
+          },
+          "401": {
+            "description": "User not logged in"
+          },
+          "403": {
+            "description": "User does not have permission to delete this resume"
+          },
+          "404": {
+            "description": "Resume not found"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "summary": "Logout a user",
+        "description": "Logs out the currently logged-in user.",
+        "responses": {
+          "200": {
+            "description": "User logged out successfully"
+          }
+        }
+      }
+    }
+  }
+}
