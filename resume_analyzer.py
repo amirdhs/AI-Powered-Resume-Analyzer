@@ -1,7 +1,17 @@
 import requests
 import PyPDF2
 import json
+import os
 from openai import OpenAI
+from dotenv import load_dotenv
+
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the API key from environment variables
+api_key = os.getenv("API_KEY")
+
 
 # Function to extract text from PDF
 def extract_text_from_pdf(pdf_path):
@@ -21,7 +31,7 @@ def extract_text_from_pdf(pdf_path):
 # OpenRouter API Configuration
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key=api_key,
 )
 
 def analyze_resume(resume_text):
