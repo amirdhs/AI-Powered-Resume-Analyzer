@@ -14,14 +14,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Swagger configuration
-SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
-API_URL = '/static/swagger.json'  # Our API url (can be a static file or a dynamic URL)
+SWAGGER_URL = '/api/docs'
+API_URL = '/static/swagger.json'
 
 # Call factory function to create our blueprint
 swaggerui_blueprint = get_swaggerui_blueprint(
-    SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+    SWAGGER_URL,
     API_URL,
-    config={  # Swagger UI config overrides
+    config={
         'app_name': "Resume Analyzer API"
     },
 )
@@ -49,7 +49,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
-    password = db.Column(db.String(200))  # Increased length for hashed passwords
+    password = db.Column(db.String(200))
 
     def __init__(self, name, email, password):
         self.name = name
@@ -111,7 +111,6 @@ def login():
             return redirect(url_for('login'))
     return render_template('login.html')
 
-
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if 'user_id' not in session:
@@ -163,6 +162,25 @@ def dashboard():
 
     return render_template('dashboard.html', name=session['user_name'], resumes=resumes, feedback=feedback)
 
+@app.route('/resume_detail/<int:resume_id>', methods=['GET'])
+def resume_detail(resume_id):
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'danger')
+        return redirect(url_for('login'))
+
+    # Fetch the resume from the database
+    resume = Resume.query.get_or_404(resume_id)
+
+    # Ensure the resume belongs to the logged-in user
+    if resume.user_id != session['user_id']:
+        flash('You do not have permission to view this resume', 'danger')
+        return redirect(url_for('dashboard'))
+
+    # Analyze the resume text and get the feedback
+    feedback = resume_analyzer.analyze_resume(resume.resume)
+
+    return render_template('resume_detail.html', resume=resume, feedback=feedback)
+
 @app.route('/delete_resume/<int:resume_id>', methods=['POST'])
 def delete_resume(resume_id):
     if 'user_id' not in session:
@@ -184,6 +202,28 @@ def delete_resume(resume_id):
     flash('Resume deleted successfully', 'success')
     return redirect(url_for('dashboard'))
 
+@app.route('/download_resume/<int:resume_id>', methods=['POST'])
+def download_resume(resume_id):
+    if 'user_id' not in session:
+        flash('Please log in to perform this action', 'danger')
+        return redirect(url_for('login'))
+
+    # Fetch the resume from the database
+    resume = Resume.query.get_or_404(resume_id)
+
+    # Ensure the resume belongs to the logged-in user
+    if resume.user_id != session['user_id']:
+        flash('You do not have permission to download this resume', 'danger')
+        return redirect(url_for('dashboard'))
+
+    # Save the resume to a file
+    file_path = f"{UPLOAD_FOLDER}/resume_{resume_id}.txt"
+    with open(file_path, 'w') as file:
+        file.write(resume.resume)
+
+    flash('Resume downloaded successfully', 'success')
+    return redirect(url_for('dashboard'))
+
 
 @app.route('/logout')
 def logout():
@@ -191,6 +231,10 @@ def logout():
     session.clear()
     flash('You have been logged out', 'success')
     return redirect(url_for('index'))
+
+
+
+
 
 # Run the app
 if __name__ == '__main__':
