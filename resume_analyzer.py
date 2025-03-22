@@ -50,8 +50,23 @@ def analyze_resume(resume_text):
         "feedback": "<concise feedback>",
         "best_match": "<best matching job title>",
         "ats_compatibility": "<feedback on ATS compatibility>",
-        "suggestions": "<Overall suggestions>"
-        "formatted_resume": "<Corrected resume text and rewrite it in a professional manner and HTML format>"
+        "suggestions": "<Overall suggestions>",
+        "formatted_resume": "<Corrected resume text and rewrite it in a professional manner and HTML format>",
+        "improvement_suggestions": {{
+            "Grammar": ["Fix subject-verb agreement", "Use active voice"],
+            "Formatting": ["Use consistent bullet points", "Add section headings"],
+            "Content": ["Add quantifiable achievements", "Tailor for specific job roles"]
+        }},
+        "best_jobs": [
+            {{
+                "title": "<job title>",
+                "match_score": <number 0-100>,
+                "matching_skills": ["skill1", "skill2"],
+                "missing_skills": ["skill3", "skill4"],
+                "recommendations": ["Add skill3", "Highlight skill1"],
+                "description": "<job description>"
+            }}
+        ]
     }}
     """
 
@@ -78,12 +93,29 @@ def analyze_resume(resume_text):
             response_json = json.loads(response_text)
         except json.JSONDecodeError as e:
             print(f"Error parsing JSON response: {e}")
-            exit(1)
+            return {
+                "score": 0,
+                "feedback": "Error analyzing resume.",
+                "best_match": "N/A",
+                "ats_compatibility": "N/A",
+                "suggestions": "N/A",
+                "formatted_resume": "N/A",
+                "improvement_suggestions": {},
+                "best_jobs": []
+            }
 
         # Return the feedback as a dictionary
         return response_json
 
     except requests.exceptions.RequestException as e:
         print(f"Error sending request to the API: {e}")
-    except (ValueError, KeyError) as e:
-        print(f"Error parsing JSON response: {e}")
+        return {
+            "score": 0,
+            "feedback": "Error analyzing resume.",
+            "best_match": "N/A",
+            "ats_compatibility": "N/A",
+            "suggestions": "N/A",
+            "formatted_resume": "N/A",
+            "improvement_suggestions": {},
+            "best_jobs": []
+        }
