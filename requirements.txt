@@ -7,7 +7,7 @@ Flask-Swagger-UI==4.11.1
 
 # Database
 SQLAlchemy==2.0.21
-psycopg2==2.9.10
+psycopg2-binary==2.9.10
 
 # Google APIs
 google-ai-generativelanguage==0.6.10
