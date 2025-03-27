@@ -1,4 +1,15 @@
 {
-  "builds" : [{"src": "run.py", "use": "@vercel/python"}],
-  "routes": [{"src": "/.*", "dest": "main.py"}]
+  "builds": [
+    {
+      "src": "run.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "run.py"
+    }
+    ]
 }
+
