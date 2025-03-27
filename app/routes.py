@@ -107,3 +107,10 @@ def delete_resume(resume_id):
     db.session.commit()
     flash('Resume deleted successfully', 'success')
     return redirect(url_for('main.dashboard'))
+
+
+@main_routes.route('/logout', methods=['GET'])
+def logout():
+    session.clear()
+    flash('You have been logged out', 'success')
+    return redirect(url_for('auth.login'))
