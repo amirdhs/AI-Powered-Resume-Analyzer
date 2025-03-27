@@ -5,8 +5,16 @@
       "src": "app.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.9"
+        "maxLambdaSize": "50mb",  // Increased for ML models
+        "runtime": "python3.9",
+        "includeFiles": [
+          "services/**",
+          "templates/**",
+          "static/**",
+          "uploads/**",
+          "instance/**",
+          ".env"
+        ]
       }
     }
   ],
@@ -20,9 +28,4 @@
       "dest": "app.py"
     }
   ],
-  "env": {
-    "FLASK_APP": "app.py",
-    "FLASK_ENV": "production",
-    "PYTHONPATH": "/var/task"
-  }
-}
+  "env":
