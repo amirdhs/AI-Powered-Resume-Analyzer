@@ -5,8 +5,7 @@
       "src": "app.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "50mb",  // Increased for ML models
-        "runtime": "python3.9",
+        "maxLambdaSize": "50mb",
         "includeFiles": [
           "services/**",
           "templates/**",
