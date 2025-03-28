@@ -3,29 +3,13 @@
   "builds": [
     {
       "src": "app.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb",  // Increased for ML models
-        "runtime": "python3.9",
-        "includeFiles": [
-          "services/**",
-          "templates/**",
-          "static/**",
-          "uploads/**",
-          "instance/**",
-          ".env"
-        ]
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "app.py"
     }
-  ],
-  "env":
+  ]
+}
