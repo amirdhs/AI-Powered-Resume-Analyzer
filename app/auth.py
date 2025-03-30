@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+
+
 from app import db
 from app.models import User
 import bcrypt
@@ -46,3 +48,5 @@ def logout():
     session.clear()
     flash('You have been logged out', 'success')
     return redirect(url_for('auth/index'))
+
+
