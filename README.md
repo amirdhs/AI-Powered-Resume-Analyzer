@@ -97,6 +97,3 @@ To deploy the application on Vercel, follow these steps:
 - `bcrypt` for password hashing
 - Google APIs for additional functionalities
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
