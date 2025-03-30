@@ -1,12 +1,14 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, session, request, current_app, make_response, \
-    abort
+    abort, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
-from app.models import Resume
+from app.models import Resume, User
 import os
 from werkzeug.utils import secure_filename
 from app.services import resume_analyzer
 
 main_routes = Blueprint('main', __name__)
+
 
 # Add this function to your routes.py
 def allowed_file(filename):
@@ -114,3 +116,21 @@ def logout():
     session.clear()
     flash('You have been logged out', 'success')
     return redirect(url_for('auth.login'))
+
+
+@main_routes.route('/me', methods=['GET'])
+@jwt_required()
+def me():
+
+    current_user_email = get_jwt_identity()
+    user = User.query.filter_by(email=current_user_email).first()
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    # Return JSON response (for APIs)
+    return jsonify({
+        "id": user.id,
+        "email": user.email,
+        "name": user.name
+    }), 200
