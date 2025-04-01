@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy import JSON
 
 from app import db
 import bcrypt
@@ -27,3 +28,16 @@ class Resume(db.Model):
     def __init__(self, user_id, resume):
         self.user_id = user_id
         self.resume = resume
+
+
+class Feedback(db.Model):
+    __tablename__ = 'feedback'
+
+    id = db.Column(db.Integer, primary_key=True)
+    resume_id = db.Column(db.Integer, db.ForeignKey('resumes.id'))
+    feedback = db.Column(JSON)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, resume_id, feedback):
+        self.resume_id = resume_id
+        self.feedback = feedback
