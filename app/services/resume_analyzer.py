@@ -51,7 +51,7 @@ def analyze_resume(resume_text):
         "best_match": "<best matching job title>",
         "ats_compatibility": "<feedback on ATS compatibility>",
         "suggestions": "<Overall suggestions>",
-        "formatted_resume": "<Corrected resume text and rewrite it in a professional manner and HTML format>",
+        "formatted_resume": "<Corrected {resume_text} and rewrite it in a professional manner and HTML format>",
         "improvement_suggestions": {{
             "Grammar": ["Fix subject-verb agreement", "Use active voice"],
             "Formatting": ["Use consistent bullet points", "Add section headings"],
