@@ -41,3 +41,17 @@ class Feedback(db.Model):
     def __init__(self, resume_id, feedback):
         self.resume_id = resume_id
         self.feedback = feedback
+
+class Subscription(db.Model):
+    __tablename__ = 'subscriptions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    plan = db.Column(db.String(50))
+    start_date = db.Column(db.DateTime, default=datetime.utcnow)
+    end_date = db.Column(db.DateTime)
+
+    def __init__(self, user_id, plan, end_date):
+        self.user_id = user_id
+        self.plan = plan
+        self.end_date = end_date
