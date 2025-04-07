@@ -3,94 +3,286 @@
   "info": {
     "title": "Resume Analyzer API",
     "version": "1.0.0",
-    "description": "API for analyzing resumes and providing feedback."
+    "description": "API for analyzing resumes, providing feedback, and managing user accounts."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Default server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "sessionAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "session"
+      }
+    },
+    "schemas": {
+      "Resume": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "resume": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Feedback": {
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": "integer"
+          },
+          "feedback": {
+            "type": "string"
+          },
+          "best_match": {
+            "type": "string"
+          },
+          "ats_compatibility": {
+            "type": "string"
+          },
+          "suggestions": {
+            "type": "string"
+          },
+          "formatted_resume": {
+            "type": "string"
+          },
+          "improvement_suggestions": {
+            "type": "object"
+          },
+          "best_jobs": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "plan": {
+            "type": "string",
+            "enum": ["Free", "Basic", "Premium"]
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "plan": {
+            "type": "string",
+            "enum": ["Free", "Basic", "Premium"]
+          }
+        },
+        "required": ["name", "email", "password", "plan"]
+      },
+      "JobCheckRequest": {
+        "type": "object",
+        "properties": {
+          "job_title": {
+            "type": "string"
+          }
+        },
+        "required": ["job_title"]
+      }
+    }
   },
   "paths": {
     "/register": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Get registration page",
+        "description": "Displays the registration page for new users",
+        "responses": {
+          "200": {
+            "description": "Registration page displayed successfully"
+          }
+        }
+      },
       "post": {
+        "tags": ["Authentication"],
         "summary": "Register a new user",
-        "description": "Allows a new user to register with their name, email, and password.",
+        "description": "Register a new user with name, email, password and subscription plan",
         "requestBody": {
           "required": true,
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  }
-                },
-                "required": ["name", "email", "password"]
+                "$ref": "#/components/schemas/RegisterRequest"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "User registered successfully"
+          "302": {
+            "description": "User registered successfully and redirected to login page"
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Email already registered or invalid input"
           }
         }
       }
     },
     "/login": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Get login page",
+        "description": "Displays the login page for users",
+        "responses": {
+          "200": {
+            "description": "Login page displayed successfully"
+          }
+        }
+      },
       "post": {
+        "tags": ["Authentication"],
         "summary": "Login a user",
-        "description": "Allows a user to login with their email and password.",
+        "description": "Authenticate a user using their email and password",
         "requestBody": {
           "required": true,
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  }
-                },
-                "required": ["email", "password"]
+                "$ref": "#/components/schemas/LoginRequest"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "User logged in successfully"
+          "302": {
+            "description": "User logged in successfully and redirected to dashboard"
           },
-          "400": {
+          "401": {
             "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Logout a user",
+        "description": "Logs out the currently logged-in user",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "User logged out successfully and redirected to login page"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": ["Public"],
+        "summary": "Homepage",
+        "description": "Displays the home page of the application",
+        "responses": {
+          "200": {
+            "description": "Homepage displayed successfully"
           }
         }
       }
     },
     "/dashboard": {
       "get": {
+        "tags": ["User Dashboard"],
         "summary": "User dashboard",
-        "description": "Displays the user's dashboard with options to upload and analyze resumes.",
+        "description": "Displays the user's dashboard with options to upload and analyze resumes",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Dashboard displayed successfully"
           },
-          "401": {
-            "description": "User not logged in"
+          "302": {
+            "description": "User not logged in, redirected to login page"
           }
         }
-      },
+      }
+    },
+    "/upload": {
       "post": {
+        "tags": ["Resume Management"],
         "summary": "Upload and analyze resume",
-        "description": "Allows the user to upload a resume and get feedback.",
+        "description": "Uploads a PDF resume and performs automatic analysis",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -109,39 +301,125 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Resume analyzed successfully"
-          },
-          "400": {
-            "description": "Invalid file type or no file uploaded"
+          "302": {
+            "description": "Resume uploaded and analyzed successfully, redirects to dashboard or error page"
           }
         }
       }
     },
-    "/delete_resume/{resume_id}": {
-      "delete": {
-        "summary": "Delete a resume",
-        "description": "Deletes a specific resume by its ID. The user must be logged in to perform this action.",
+    "/subscription": {
+      "get": {
+        "tags": ["Subscription"],
+        "summary": "View subscription details",
+        "description": "Displays the user's current subscription information",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription details displayed successfully"
+          },
+          "302": {
+            "description": "User not logged in, redirected to login page"
+          }
+        }
+      }
+    },
+    "/subscription/update": {
+      "post": {
+        "tags": ["Subscription"],
+        "summary": "Update subscription plan",
+        "description": "Updates the user's subscription plan",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "plan": {
+                    "type": "string",
+                    "enum": ["Free", "Basic", "Premium"]
+                  }
+                },
+                "required": ["plan"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Subscription updated successfully or error occurred, user is redirected"
+          }
+        }
+      }
+    },
+    "/feedback/{resume_id}": {
+      "get": {
+        "tags": ["Resume Analysis"],
+        "summary": "Get resume feedback",
+        "description": "Generates and displays feedback for a specific resume",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "resume_id",
             "in": "path",
             "required": true,
-            "description": "The ID of the resume to delete.",
             "schema": {
               "type": "integer"
-            }
+            },
+            "description": "ID of the resume to get feedback for"
           }
         ],
         "responses": {
           "200": {
-            "description": "Resume deleted successfully"
+            "description": "Resume feedback displayed successfully"
           },
-          "401": {
-            "description": "User not logged in"
+          "302": {
+            "description": "User not logged in or doesn't have permission, redirected to login page"
           },
-          "403": {
-            "description": "User does not have permission to delete this resume"
+          "404": {
+            "description": "Resume not found"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Resume Analysis"],
+        "summary": "Generate resume feedback",
+        "description": "Analyzes a resume and generates feedback",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "resume_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the resume to analyze"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resume feedback generated successfully"
+          },
+          "302": {
+            "description": "User not logged in or doesn't have permission, redirected to login page"
           },
           "404": {
             "description": "Resume not found"
@@ -149,13 +427,126 @@
         }
       }
     },
-    "/logout": {
+    "/check_job/{resume_id}": {
+      "post": {
+        "tags": ["Resume Analysis"],
+        "summary": "Check job suitability",
+        "description": "Analyzes how well a resume matches a specific job role",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "resume_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the resume to check"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/JobCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Job check completed and redirected to resume view page or error page"
+          }
+        }
+      }
+    },
+    "/resume/{resume_id}/view": {
       "get": {
-        "summary": "Logout a user",
-        "description": "Logs out the currently logged-in user.",
+        "tags": ["Resume Management"],
+        "summary": "View resume details",
+        "description": "Displays detailed view of a resume with feedback",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "resume_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the resume to view"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "User logged out successfully"
+            "description": "Resume details displayed successfully"
+          },
+          "404": {
+            "description": "Resume not found"
+          }
+        }
+      }
+    },
+    "/resume/{resume_id}/delete": {
+      "post": {
+        "tags": ["Resume Management"],
+        "summary": "Delete a resume",
+        "description": "Deletes a resume and its associated feedback",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "resume_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the resume to delete"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Resume deleted successfully or error occurred, user is redirected"
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": ["User Profile"],
+        "summary": "Get current user data",
+        "description": "Returns JSON data about the currently logged in user",
+        "security": [
+          {
+            "sessionAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User not logged in"
           }
         }
       }
