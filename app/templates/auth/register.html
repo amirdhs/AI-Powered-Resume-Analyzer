@@ -1,3 +1,5 @@
+[file name]: register.html
+[file content begin]
 {% extends "base.html" %}
 
 {% block title %}Register{% endblock %}
@@ -25,10 +27,21 @@
                         <div class="invalid-feedback">Please provide a valid email.</div>
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required minlength="6">
                         <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="plan" class="form-label">Subscription Plan</label>
+                        <select class="form-select" id="plan" name="plan" required>
+                            <option value="" selected disabled>Select a plan</option>
+                            <option value="Free">Free (5 resumes/month)</option>
+                            <option value="Basic">Basic (20 resumes/month)</option>
+                            <option value="Premium">Premium (Unlimited resumes)</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a plan.</div>
                     </div>
 
                     <div class="d-grid mb-3">
@@ -44,24 +57,4 @@
     </div>
 </div>
 {% endblock %}
-
-{% block scripts %}
-<script>
-// Form validation
-(() => {
-  'use strict'
-  const forms = document.querySelectorAll('.needs-validation')
-
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
-</script>
-{% endblock %}
+[file content end]

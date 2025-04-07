@@ -98,6 +98,11 @@
                         <i class="bi bi-file-text me-1"></i> Formatted Resume
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="checkjob-tab" data-bs-toggle="tab" data-bs-target="#checkjob" type="button" role="tab">
+                        <i class="bi bi-search me-1"></i> Check Job Fit
+                    </button>
+                </li>
             </ul>
 
             <div class="tab-content p-4" id="analysisTabsContent">
@@ -200,81 +205,116 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Check Job Fit Tab -->
+                <div class="tab-pane fade" id="checkjob" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="h5 mb-0">Check Job Suitability</h3>
+                        <form method="POST" action="{{ url_for('main.check_job', resume_id=resume.id) }}" class="d-flex">
+                            <input type="text" class="form-control me-2" name="job_title" placeholder="Enter Job Title" required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-1"></i> Check
+                            </button>
+                        </form>
+                    </div>
+
+                    {% if job_check %}
+                    <div class="card border-0 shadow-sm mt-3">
+                        <div class="card-body">
+                            <h4 class="h6 mb-3">Results for: {{ job_check.job_role }}</h4>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="progress flex-grow-1 me-3" style="height: 10px;">
+                                    <div class="progress-bar bg-success" role="progressbar"
+                                         style="width: {{ job_check.suitability_score }}%"
+                                         aria-valuenow="{{ job_check.suitability_score }}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100"></div>
+                                </div>
+                                <span class="fw-bold">{{ job_check.suitability_score }}% Match</span>
+                            </div>
+                            <div class="alert alert-info">
+                                <h5 class="h6 mb-2">Recommendations:</h5>
+                                <p class="mb-0">{{ job_check.recommendations }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Job Detail Modals -->
-{% for job in feedback.best_jobs %}
-<div class="modal fade" id="jobModal{{ loop.index }}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{{ job.title }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm mb-3">
-                            <div class="card-body">
-                                <h6 class="mb-3">Job Description</h6>
-                                <p class="text-muted">{{ job.description }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm mb-3">
-                            <div class="card-body">
-                                <h6 class="mb-3">Recommendations</h6>
-                                <ul class="list-unstyled">
-                                    {% for recommendation in job.recommendations %}
-                                    <li class="mb-2 d-flex">
-                                        <i class="bi bi-check-circle text-success me-2"></i>
-                                        <span>{{ recommendation }}</span>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Job Detail Modals -->
+    {% for job in feedback.best_jobs %}
+    <div class="modal fade" id="jobModal{{ loop.index }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ job.title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body">
-                                <h6 class="mb-3">Matching Skills</h6>
-                                <div class="d-flex flex-wrap gap-2">
-                                    {% for skill in job.matching_skills %}
-                                    <span class="badge bg-success">{{ skill }}</span>
-                                    {% endfor %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm mb-3">
+                                <div class="card-body">
+                                    <h6 class="mb-3">Job Description</h6>
+                                    <p class="text-muted">{{ job.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm mb-3">
+                                <div class="card-body">
+                                    <h6 class="mb-3">Recommendations</h6>
+                                    <ul class="list-unstyled">
+                                        {% for recommendation in job.recommendations %}
+                                        <li class="mb-2 d-flex">
+                                            <i class="bi bi-check-circle text-success me-2"></i>
+                                            <span>{{ recommendation }}</span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body">
-                                <h6 class="mb-3">Missing Skills</h6>
-                                <div class="d-flex flex-wrap gap-2">
-                                    {% for skill in job.missing_skills %}
-                                    <span class="badge bg-danger">{{ skill }}</span>
-                                    {% endfor %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="mb-3">Matching Skills</h6>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for skill in job.matching_skills %}
+                                        <span class="badge bg-success">{{ skill }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="mb-3">Missing Skills</h6>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for skill in job.missing_skills %}
+                                        <span class="badge bg-danger">{{ skill }}</span>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
+    {% endfor %}
 </div>
-{% endfor %}
 {% endblock %}
 
 {% block scripts %}

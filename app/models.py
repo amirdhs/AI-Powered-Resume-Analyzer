@@ -11,6 +11,7 @@ class User(db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(200))
+    subscriptions = db.relationship('Subscription', backref='user', lazy=True)
 
     def __init__(self, name, email, password):
         self.name = name
@@ -36,6 +37,7 @@ class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     resume_id = db.Column(db.Integer, db.ForeignKey('resumes.id'))
     feedback = db.Column(JSON)
+    check_job = db.Column(JSON)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, resume_id, feedback):
@@ -44,6 +46,7 @@ class Feedback(db.Model):
 
 class Subscription(db.Model):
     __tablename__ = 'subscriptions'
+
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))

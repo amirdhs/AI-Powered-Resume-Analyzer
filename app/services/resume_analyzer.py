@@ -51,7 +51,7 @@ def analyze_resume(resume_text):
         "best_match": "<best matching job title>",
         "ats_compatibility": "<feedback on ATS compatibility>",
         "suggestions": "<Overall suggestions>",
-        "formatted_resume": "<Corrected {resume_text} and rewrite it in a professional manner and HTML format>",
+        "formatted_resume": "<Corrected {resume_text} and rewrite it in a professional manner and HTML format.make score 100>",
         "improvement_suggestions": {{
             "Grammar": ["Fix subject-verb agreement", "Use active voice"],
             "Formatting": ["Use consistent bullet points", "Add section headings"],
@@ -118,4 +118,58 @@ def analyze_resume(resume_text):
             "formatted_resume": "N/A",
             "improvement_suggestions": {},
             "best_jobs": []
+        }
+
+def check_for_job(resume_text,job_role):
+    # Define the prompt for job role analysis
+    prompt = f"""[SYSTEM: You are a resume analysis AI that must respond with valid JSON only. Do not explain, just output the JSON.]
+
+    Considering the background, education, and skills, is this job {job_role} role best suit for this resume {resume_text}?
+
+    RESPOND WITH THIS JSON ONLY:
+    {{
+        "job_role": "<job role>",
+        "suitability_score": <number 0-100>,
+        "recommendations": "<concise feedback>"
+    }}
+    """
+
+    # Call OpenRouter AI API
+    try:
+        completion = client.chat.completions.create(
+            extra_headers={
+                "HTTP-Referer": "<YOUR_SITE_URL>",  # Optional
+                "X-Title": "<YOUR_SITE_NAME>",  # Optional
+            },
+            extra_body={},
+            model="deepseek/deepseek-r1-distill-qwen-32b:free",
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        # Parse JSON response
+        response_text = completion.choices[0].message.content.strip()
+
+        # Remove backticks if they exist
+        if response_text.startswith("```json") and response_text.endswith("```"):
+            response_text = response_text[7:-3].strip()
+
+        try:
+            response_json = json.loads(response_text)
+        except json.JSONDecodeError as e:
+            print(f"Error parsing JSON response: {e}")
+            return {
+                "job_role": "N/A",
+                "suitability_score": 0,
+                "recommendations": "Error analyzing resume."
+            }
+
+        # Return the feedback as a dictionary
+        return response_json
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error sending request to the API: {e}")
+        return {
+            "job_role": "N/A",
+            "suitability_score": 0,
+            "recommendations": "Error analyzing resume."
         }
