@@ -13,7 +13,7 @@ class Config:
     PROPAGATE_EXCEPTIONS = True
 
     # Database Config
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:4181@localhost:5432/resumeanalyzer')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:4181@localhost:5432/resumeanalyzer-v2')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True}
 
@@ -34,5 +34,3 @@ class Config:
     SWAGGER_URL = '/api/docs'
     API_URL = '/static/swagger.json'
     SWAGGER_APP_NAME = 'Resume Analyzer API'
-
-
