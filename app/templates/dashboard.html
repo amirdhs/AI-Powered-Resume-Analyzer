@@ -52,6 +52,18 @@
     </div>
 
     <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Your Subscription</h2>
+                {% if subscription %}
+                <p><strong>Plan:</strong> {{ subscription.plan }}</p>
+                <p><strong>End Date:</strong> {{ subscription.end_date.strftime('%Y-%m-%d') }}</p>
+                {% else %}
+                <p>You do not have an active subscription.</p>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="card border-0 shadow-sm">
             <div class="card-body">
                 <h2 class="h5 mb-3">Your Resumes</h2>
