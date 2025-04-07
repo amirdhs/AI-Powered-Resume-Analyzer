@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Subscription{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="h3 mb-4">Your Subscription</h1>
+    {% if subscription %}
+    <p><strong>Plan:</strong> {{ subscription.plan }}</p>
+    <p><strong>End Date:</strong> {{ subscription.end_date.strftime('%Y-%m-%d') }}</p>
+    <form method="POST" action="{{ url_for('main.update_subscription') }}">
+        <div class="mb-3">
+            <label for="plan" class="form-label">Update Plan</label>
+            <select class="form-select" id="plan" name="plan" required>
+                <option value="Free" {% if subscription.plan == 'Free' %}selected{% endif %}>Free</option>
+                <option value="Basic" {% if subscription.plan == 'Basic' %}selected{% endif %}>Basic</option>
+                <option value="Premium" {% if subscription.plan == 'Premium' %}selected{% endif %}>Premium</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Subscription</button>
+    </form>
+    {% else %}
+    <p>You do not have an active subscription.</p>
+    {% endif %}
+</div>
+{% endblock %}
