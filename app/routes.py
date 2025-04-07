@@ -1,7 +1,9 @@
+from datetime import datetime, timedelta
+
 from flask import Blueprint, render_template, redirect, url_for, flash, session, request, current_app, make_response, abort, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
-from app.models import Resume, User, Feedback
+from app.models import Resume, User, Feedback, Subscription
 import os
 from werkzeug.utils import secure_filename
 from app.services import resume_analyzer
@@ -16,17 +18,19 @@ def allowed_file(filename):
 def index():
     return render_template('index.html')
 
+
 @main_routes.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if 'user_id' not in session:
         flash('Please log in to access the dashboard', 'danger')
         return redirect(url_for('auth.login'))
+
     user_id = session['user_id']
     resumes = Resume.query.filter_by(user_id=user_id).all()
-    user = User.query.get(session['user_id'])
-    return render_template('dashboard.html', resumes=resumes, user=user)
+    user = User.query.get(user_id)
+    subscription = Subscription.query.filter_by(user_id=user_id).first()
 
-
+    return render_template('dashboard.html', resumes=resumes, user=user, subscription=subscription)
 
 @main_routes.route('/upload', methods=['POST'])
 def upload():
@@ -62,7 +66,34 @@ def upload():
 
         flash('Resume uploaded and analyzed successfully', 'success')
         return redirect(url_for('main.dashboard'))
-@main_routes.route('/feedback/<int:resume_id>', methods=['GET'])
+
+@main_routes.route('/subscription')
+def subscription():
+    if 'user_id' not in session:
+        flash('Please log in to view your subscription', 'danger')
+        return redirect(url_for('auth.login'))
+
+    user_id = session['user_id']
+    subscription = Subscription.query.filter_by(user_id=user_id).first()
+    return render_template('subscription.html', subscription=subscription)
+
+@main_routes.route('/subscription/update', methods=['POST'])
+def update_subscription():
+    if 'user_id' not in session:
+        flash('Please log in to update your subscription', 'danger')
+        return redirect(url_for('auth.login'))
+
+    user_id = session['user_id']
+    plan = request.form['plan']
+    subscription = Subscription.query.filter_by(user_id=user_id).first()
+    subscription.plan = plan
+    subscription.end_date = datetime.utcnow() + timedelta(days=30)  # Example: 30 days subscription
+    db.session.commit()
+
+    flash('Subscription updated successfully', 'success')
+    return redirect(url_for('main.subscription'))
+
+@main_routes.route('/feedback/<int:resume_id>', methods=['GET', 'POST'])
 def feedback(resume_id):
     if 'user_id' not in session:
         flash('Please log in to access this page', 'danger')
@@ -83,16 +114,45 @@ def feedback(resume_id):
     flash('Feedback generated successfully', 'success')
     return render_template('dashboard/resume_detail.html', resume=resume, feedback=feedback)
 
+
+@main_routes.route('/check_job/<int:resume_id>', methods=['POST'])
+def check_job(resume_id):
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'danger')
+        return redirect(url_for('auth.login'))
+
+    resume = Resume.query.get_or_404(resume_id)
+    if resume.user_id != session['user_id']:
+        flash('You do not have permission to view this resume', 'danger')
+        return redirect(url_for('main.dashboard'))
+
+    job_role = request.form.get('job_title')
+    job_check_result = resume_analyzer.check_for_job(resume.resume, job_role)
+
+    # Update or create feedback with job check results
+    feedback = Feedback.query.filter_by(resume_id=resume.id).first()
+    if feedback:
+        feedback.check_job = job_check_result
+    else:
+        feedback = Feedback(resume_id=resume.id, feedback={}, check_job=job_check_result)
+        db.session.add(feedback)
+
+    db.session.commit()
+
+    return redirect(url_for('main.view_resume', resume_id=resume_id))
+
 @main_routes.route('/resume/<int:resume_id>/view', methods=['GET'])
 def view_resume(resume_id):
     resume = Resume.query.get_or_404(resume_id)
     feedback = Feedback.query.filter_by(resume_id=resume.id).first()
-    if feedback:
-        feedback_data = feedback.feedback
-    else:
-        feedback_data = None
 
-    return render_template('dashboard/resume_detail.html', resume=resume, feedback=feedback_data)
+    feedback_data = feedback.feedback if feedback else None
+    job_check_data = feedback.check_job if feedback else None
+
+    return render_template('dashboard/resume_detail.html',
+                           resume=resume,
+                           feedback=feedback_data,
+                           job_check=job_check_data)
 
 
 @main_routes.route('/resume/<int:resume_id>/delete', methods=['POST'])
