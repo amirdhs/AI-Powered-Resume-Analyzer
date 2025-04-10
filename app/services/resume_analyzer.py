@@ -51,7 +51,7 @@ def analyze_resume(resume_text):
         "best_match": "<best matching job title>",
         "ats_compatibility": "<feedback on ATS compatibility>",
         "suggestions": "<Overall suggestions>",
-        "formatted_resume": "<Corrected {resume_text} and rewrite it in a professional manner and HTML format.make score 100>",
+        "formatted_resume": "<Corrected {resume_text} and rewrite it in a professional manner and HTML format.>",
         "improvement_suggestions": {{
             "Grammar": ["Fix subject-verb agreement", "Use active voice"],
             "Formatting": ["Use consistent bullet points", "Add section headings"],
@@ -138,8 +138,8 @@ def check_for_job(resume_text,job_role):
     try:
         completion = client.chat.completions.create(
             extra_headers={
-                "HTTP-Referer": "<YOUR_SITE_URL>",  # Optional
-                "X-Title": "<YOUR_SITE_NAME>",  # Optional
+                "HTTP-Referer": "<YOUR_SITE_URL>",
+                "X-Title": "<YOUR_SITE_NAME>",
             },
             extra_body={},
             model="deepseek/deepseek-r1-distill-qwen-32b:free",
