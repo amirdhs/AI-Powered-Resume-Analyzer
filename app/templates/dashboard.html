@@ -61,6 +61,9 @@
                 {% else %}
                 <p>You do not have an active subscription.</p>
                 {% endif %}
+                <a href="{{ url_for('main.subscription') }}" class="btn btn-primary">
+                    <i class="bi bi-credit-card me-1"></i> Change Plan
+                </a>
             </div>
         </div>
 
