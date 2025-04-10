@@ -34,6 +34,8 @@ def register():
         flash('You are registered successfully', 'success')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html')
+
+
 @auth_routes.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
