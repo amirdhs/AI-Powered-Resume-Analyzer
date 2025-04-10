@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-
 from flask import Blueprint, render_template, redirect, url_for, flash, session, request, current_app, make_response, abort, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
@@ -54,11 +53,11 @@ def upload():
         file.save(file_path)
 
         resume_text = resume_analyzer.extract_text_from_pdf(file_path)
-        feedback = resume_analyzer.analyze_resume(resume_text)  # Analyze immediately
+        feedback = resume_analyzer.analyze_resume(resume_text)
 
         new_resume = Resume(user_id=session['user_id'], resume=resume_text)
         db.session.add(new_resume)
-        db.session.flush()  # Get the ID before commit
+        db.session.flush()
 
         new_feedback = Feedback(resume_id=new_resume.id, feedback=feedback)
         db.session.add(new_feedback)
@@ -87,7 +86,7 @@ def update_subscription():
     plan = request.form['plan']
     subscription = Subscription.query.filter_by(user_id=user_id).first()
     subscription.plan = plan
-    subscription.end_date = datetime.utcnow() + timedelta(days=30)  # Example: 30 days subscription
+    subscription.end_date = datetime.utcnow() + timedelta(days=30)
     db.session.commit()
 
     flash('Subscription updated successfully', 'success')
