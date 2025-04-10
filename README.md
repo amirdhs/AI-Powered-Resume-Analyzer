@@ -1,99 +1,109 @@
-# AI-Powered Resume Analyzer
+# Resume Analyzer - AI-Powered Resume Analysis Tool
 
-AI-Powered Resume Analyzer is a web application built using the Flask framework in Python. The application allows users to upload their resumes in PDF format, which are then analyzed by an AI to provide feedback and suggestions for improvement.
+A Flask web application that analyzes resumes using AI and provides feedback to help job seekers improve their applications.
 
 ## Features
 
-- User registration and login
-- Upload resumes in PDF format
-- Analyze resumes using AI
-- Provide feedback and suggestions for improvement
-- View and download analyzed resumes
-- Delete resumes
+- **AI-Powered Resume Analysis**: Get detailed feedback on your resume using advanced AI models  
+- **Job Role Matching**: Check your resume compatibility with specific job positions  
+- **ATS Compatibility**: Verify if your resume can pass Applicant Tracking Systems  
+- **Resume Management**: Upload, view, and manage multiple resumes  
+- **Formatted Resume**: Get professionally formatted versions of your resume  
+- **Subscription Plans**: Different plans with varied features (Free, Basic, Premium)
+
+## Technology Stack
+
+- **Backend**: Flask (Python)  
+- **Database**: PostgreSQL  
+- **Authentication**: Session-based authentication with bcrypt  
+- **AI Integration**: DeepSeek models via OpenRouter API  
+- **Frontend**: Bootstrap 5, HTML/CSS, JavaScript
+
+## Local Development
+
+1. **Clone the repository**
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Set environment variables**: Create a `.env` file with the following variables:
+   ```env
+   API_KEY=your_openrouter_api_key
+   SECRET_KEY=your_flask_secret_key
+   DATABASE_URL=postgresql://username:password@localhost:5432/dbname
+   ```
+
+4. **Initialize the database:**
+   ```bash
+   flask db init
+   flask db migrate
+   flask db upgrade
+   ```
+
+5. **Run the application:**
+   ```bash
+   flask run
+   ```
+
+## Deployment on Vercel
+
+### Prerequisites
+
+- Vercel account  
+- PostgreSQL database service (e.g., ElephantSQL, Supabase)
+
+### Deployment Steps
+
+1. **Set up a cloud PostgreSQL database**: Create an account with a PostgreSQL provider and get your connection string.
+
+2. **Configure environment variables in Vercel**:
+   - `API_KEY`: Your OpenRouter API key  
+   - `SECRET_KEY`: Flask secret key  
+   - `DATABASE_URL`: Your cloud database connection string
+
+3. **Deploy to Vercel:**
+   ```bash
+   vercel
+   ```
+
+> The project includes a configured `vercel.json` file for seamless deployment.
 
 ## Project Structure
 
-- `app.py`: The main entry point of the application. It initializes the Flask app and sets up the database.
-- `app/models.py`: Defines the database models for `User` and `Resume`.
-- `app/routes.py`: Contains the main routes for the application, including the dashboard, resume upload, and analysis.
-- `app/auth.py`: Handles user authentication, including registration and login.
-- `app/config.py`: Configuration settings for the Flask app, including database and JWT settings.
-- `app/services/resume_analyzer.py`: Contains the logic for extracting text from PDF resumes and analyzing them using an AI API.
-- `app/templates/`: Directory containing HTML templates for rendering the web pages.
-- `app/static/`: Directory for static files like CSS, JavaScript, and images.
-- `requirements.txt`: Lists the Python dependencies required for the project.
-- `vercel.json`: Configuration file for deploying the application on Vercel.
-- `.env`: Environment variables for sensitive information like API keys and database URLs.
+```
+├── app/
+│   ├── auth.py               # Authentication routes
+│   ├── models.py             # Database models
+│   ├── routes.py             # Main application routes
+│   ├── config.py             # Configuration settings
+│   ├── services/
+│   │   └── resume_analyzer.py  # Resume analysis logic
+│   ├── static/               # Static assets
+│   └── templates/            # HTML templates
+├── app.py                    # Application entry point
+├── requirements.txt          # Project dependencies
+└── vercel.json               # Vercel deployment configuration
+```
 
-## Installation
+## Authentication
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/yourusername/ai-powered-resume-analyzer.git
-    cd ai-powered-resume-analyzer
-    ```
+The application uses Flask's session-based authentication:
 
-2. Create a virtual environment and activate it:
-    ```sh
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
+- User registration with name, email, and password  
+- Password encryption using bcrypt  
+- Protected routes requiring login  
+- Session management for authentication state
 
-3. Install the dependencies:
-    ```sh
-    pip install -r requirements.txt
-    ```
+## Resume Analysis Features
 
-4. Set up the environment variables:
-    ```sh
-    cp .env.example .env
-    ```
+- Resume scoring (0–100)  
+- Content feedback  
+- Grammar and style suggestions  
+- Job matching recommendations  
+- ATS compatibility analysis  
+- Skills gap identification
+```
 
-5. Update the `.env` file with your API keys and database URL.
-
-6. Initialize the database:
-    ```sh
-    flask db upgrade
-    ```
-
-7. Run the application:
-    ```sh
-    flask run
-    ```
-
-## Usage
-
-1. Register a new user account.
-2. Log in with your credentials.
-3. Upload a resume in PDF format.
-4. View the analysis results and feedback.
-5. Download or delete the analyzed resume.
-
-## Configuration
-
-- `app/config.py`: Loads environment variables and sets configuration options for the Flask app.
-- `vercel.json`: Configures the deployment on Vercel, specifying the build settings and routes.
-
-## Deployment
-
-To deploy the application on Vercel, follow these steps:
-
-1. Install the Vercel CLI:
-    ```sh
-    npm install -g vercel
-    ```
-
-2. Deploy the application:
-    ```sh
-    vercel
-    ```
-
-## Dependencies
-
-- Flask and various Flask extensions (e.g., Flask-SQLAlchemy, Flask-Migrate, Flask-JWT-Extended)
-- SQLAlchemy for ORM
-- `PyPDF2` for PDF text extraction
-- `requests` for making API calls
-- `bcrypt` for password hashing
-- Google APIs for additional functionalities
-
+Let me know if you'd like this saved as a `.md` file!
