@@ -1,6 +1,8 @@
 # AI-Powered Resume Analyzer
 
 A Flask web application that analyzes resumes using AI and provides feedback to help job seekers improve their applications.
+
+![AI-Powered Resume Analyzer](api/app/static/images/demo.png)
 ## Live Demo
 You can check out the live demo of the Resume Analyzer application at [Resume Analyzer Demo](https://ai-resume-analyzer-five.vercel.app/).
 ## Features
@@ -117,8 +119,8 @@ The application uses Flask's session-based authentication:
 The application integrates with OpenRouter API to access DeepSeek AI models for resume analysis. This enables advanced natural language processing capabilities for providing accurate and helpful feedback on resumes.
 
 ## Contributing
-1.Fork the repository
-2.Create a feature branch: git checkout -b feature-name
-3.Commit your changes: git commit -am 'Add new feature'
-4.Push to the branch: git push origin feature-name
-5.Submit a pull request
+1. Fork the repository
+2. Create a feature branch: git checkout -b feature-name
+3. Commit your changes: git commit -am 'Add new feature'
+4. Push to the branch: git push origin feature-name
+5. Submit a pull request
