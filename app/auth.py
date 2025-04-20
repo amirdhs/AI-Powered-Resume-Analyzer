@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
-
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session
-
+from flask_jwt_extended import create_access_token
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, jsonify
 
 from app import db
 from app.models import User, Subscription
@@ -36,6 +35,7 @@ def register():
     return render_template('auth/register.html')
 
 
+
 @auth_routes.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -44,20 +44,28 @@ def login():
 
         user = User.query.filter_by(email=email).first()
         if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+            # Generate JWT token
+            access_token = create_access_token(identity=str(user.id))
+
+            # Store the token in the default cookie name
+            response = redirect(url_for('main.dashboard'))
+            response.set_cookie('access_token_cookie', access_token, httponly=True)
+
+            # Set session for navbar rendering
             session['user_id'] = user.id
-            session['user_name'] = user.name
-            flash('You are logged in successfully', 'success')
-            return redirect(url_for('main.dashboard'))
+            return response
         else:
             flash('Invalid credentials', 'danger')
             return redirect(url_for('auth.login'))
+
     return render_template('auth/login.html')
 
 
+# app/auth.py
 @auth_routes.route('/logout')
 def logout():
-    session.clear()
+    session.clear()  # Clear session data
+    response = redirect(url_for('auth.login'))
+    response.delete_cookie('access_token_cookie')  # Remove JWT cookie
     flash('You have been logged out', 'success')
-    return redirect(url_for('auth/index'))
-
-
+    return response
