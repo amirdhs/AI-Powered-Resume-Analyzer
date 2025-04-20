@@ -8,3 +8,4 @@ migrate = Migrate(app, db)
 # Optional: If you want to auto-create tables during Vercel deployment
 with app.app_context():
     db.create_all()
+
