@@ -13,7 +13,7 @@ class Config:
     PROPAGATE_EXCEPTIONS = True
 
     # Database Config
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:4181@localhost:5432/resumeanalyzer-v2')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://resumeanalyzer_v2_user:T0xOheInOoBfysXvjLMTkI9Jode71Pae@dpg-cvrqvter433s73b278ig-a.oregon-postgres.render.com/resumeanalyzer_v2')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True}
 
