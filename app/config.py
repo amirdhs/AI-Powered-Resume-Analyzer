@@ -24,11 +24,11 @@ class Config:
 
     # JWT Configuration
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'super-secret-jwt-key')
-    JWT_TOKEN_LOCATION = ['headers']
+    JWT_TOKEN_LOCATION = ['cookies']
+    JWT_ACCESS_COOKIE_PATH = '/'
+    JWT_COOKIE_SECURE = False
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
-    JWT_HEADER_NAME = 'Authorization'
-    JWT_HEADER_TYPE = 'Bearer'
 
     # Swagger UI Config
     SWAGGER_URL = '/api/docs'
