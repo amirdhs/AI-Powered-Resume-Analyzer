@@ -1,58 +1,114 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero-section py-5 bg-light">
+<!-- Hero Section -->
+<section class="hero-section py-5">
     <div class="container py-5">
         <div class="row align-items-center">
             <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">AI-Powered Resume Analysis</h1>
+                <h1 class="display-4 fw-bold mb-4">AI-Powered Resume Analyser</h1>
                 <p class="lead mb-4">Get instant feedback on your resume's content, formatting, and ATS compatibility to maximize your job search success.</p>
                 <div class="d-flex gap-3">
                     <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-4">Get Started</a>
                     <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg px-4">Login</a>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <img src="{{ url_for('static', filename='images/hero-image.jpg') }}" alt="Resume Analysis" class="img-fluid">
+            <div class="col-lg-6 text-center">
+                <img src="{{ url_for('static', filename='images/hero-image.jpg') }}" alt="Resume Analysis" class="img-fluid rounded">
             </div>
         </div>
     </div>
 </section>
 
+<!-- Features Section -->
 <section class="features-section py-5">
     <div class="container py-4">
-        <h2 class="text-center mb-5">How It Works</h2>
+        <h2 class="text-center mb-5 fw-semibold">How It Works</h2>
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center p-4">
+                <div class="card h-100 text-center shadow-sm border-0">
+                    <div class="card-body p-4">
                         <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
                             <i class="bi bi-upload fs-2"></i>
                         </div>
-                        <h3 class="h5">Upload Resume</h3>
+                        <h5 class="card-title">Upload Resume</h5>
                         <p class="text-muted">Simply upload your resume in PDF format to get started with the analysis.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center p-4">
+                <div class="card h-100 text-center shadow-sm border-0">
+                    <div class="card-body p-4">
                         <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
                             <i class="bi bi-graph-up fs-2"></i>
                         </div>
-                        <h3 class="h5">Instant Analysis</h3>
+                        <h5 class="card-title">Instant Analysis</h5>
                         <p class="text-muted">Our AI analyzes your resume for content, formatting, and ATS compatibility.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center p-4">
+                <div class="card h-100 text-center shadow-sm border-0">
+                    <div class="card-body p-4">
                         <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-3 mx-auto">
                             <i class="bi bi-lightbulb fs-2"></i>
                         </div>
-                        <h3 class="h5">Get Recommendations</h3>
+                        <h5 class="card-title">Get Recommendations</h5>
                         <p class="text-muted">Receive actionable suggestions to improve your resume and job prospects.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="pricing-section py-5">
+    <div class="container py-4">
+        <h2 class="text-center mb-5 fw-semibold">Choose Your Plan</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Free Plan -->
+            <div class="col">
+                <div class="card h-100 border shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <h5 class="card-title">Free</h5>
+                        <h6 class="card-price display-6">$0<span class="fs-6">/mo</span></h6>
+                        <ul class="list-unstyled my-3">
+                            <li>✓ 1 Resume Analysis</li>
+                            <li>✗ No Feedback</li>
+                            <li>✗ No History</li>
+                        </ul>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary w-100">Start Free</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Basic Plan -->
+            <div class="col">
+                <div class="card h-100 border shadow text-center bg-white">
+                    <div class="card-body p-4">
+                        <h5 class="card-title">Basic</h5>
+                        <h6 class="card-price display-6">$9<span class="fs-6">/mo</span></h6>
+                        <ul class="list-unstyled my-3">
+                            <li>✓ 5 Resume Analyses</li>
+                            <li>✓ Basic Feedback</li>
+                            <li>✗ Priority Support</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary w-100">Subscribe</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Premium Plan -->
+            <div class="col">
+                <div class="card h-100 border shadow text-center bg-white">
+                    <div class="card-body p-4">
+                        <h5 class="card-title">Premium</h5>
+                        <h6 class="card-price display-6">$19<span class="fs-6">/mo</span></h6>
+                        <ul class="list-unstyled my-3">
+                            <li>✓ Unlimited Analyses</li>
+                            <li>✓ Full Feedback</li>
+                            <li>✓ Priority Support</li>
+                        </ul>
+                        <a href="#" class="btn btn-success w-100">Go Premium</a>
                     </div>
                 </div>
             </div>
