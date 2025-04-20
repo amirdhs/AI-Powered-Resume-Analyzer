@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
-from flask import Blueprint, render_template, redirect, url_for, flash, session, request, current_app, make_response, abort, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash, session, request, current_app, abort, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app import db
-from app.models import Resume, User, Feedback, Subscription
+from api.app import db
+from api.app.models import Resume, User, Feedback, Subscription
 import os
 from werkzeug.utils import secure_filename
-from app.services import resume_analyzer
+from api.app.services import resume_analyzer
 
 main_routes = Blueprint('main', __name__)
 

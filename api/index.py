@@ -1,5 +1,10 @@
-# Import the Flask app from app.py
-import main as application
+from flask_migrate import Migrate
+from api.app import create_app, db
+from api.app.config import Config
 
-# Expose the app as "app" for Vercel
-app = application
+app = create_app(config_class=Config)
+migrate = Migrate(app, db)
+
+# Optional: If you want to auto-create tables during Vercel deployment
+with app.app_context():
+    db.create_all()

@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import JSON
 
-from app import db
+from api.app import db
 import bcrypt
 
 class User(db.Model):
