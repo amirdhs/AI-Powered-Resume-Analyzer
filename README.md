@@ -1,4 +1,4 @@
-# Resume Analyzer - AI-Powered Resume Analysis Tool
+# AI-Powered Resume Analyzer
 
 A Flask web application that analyzes resumes using AI and provides feedback to help job seekers improve their applications.
 ## Live Demo
