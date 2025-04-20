@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from flask_jwt_extended import create_access_token
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 
-from app import db
-from app.models import User, Subscription
+from api.app import db
+from api.app.models import User, Subscription
 import bcrypt
 
 auth_routes = Blueprint('auth', __name__)
