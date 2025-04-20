@@ -34,8 +34,8 @@ def create_app(config_class='app.config.Config'):
     app.register_blueprint(swaggerui_blueprint, url_prefix=app.config.get('SWAGGER_URL', '/api/docs'))
 
     # Register blueprints
-    from app.routes import main_routes
-    from app.auth import auth_routes
+    from api.app.routes import main_routes
+    from api.app.auth import auth_routes
     app.register_blueprint(main_routes)
     app.register_blueprint(auth_routes)
 
