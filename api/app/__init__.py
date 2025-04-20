@@ -3,11 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_jwt_extended import JWTManager
 import os
+import tempfile
 
 # Initialize extensions
 db = SQLAlchemy()
 jwt = JWTManager()
-
 
 def create_app(config_class='app.config.Config'):
     """Application factory function"""
@@ -16,10 +16,10 @@ def create_app(config_class='app.config.Config'):
     # Load configuration
     app.config.from_object(config_class)
 
-    # Ensure upload folder exists
-    upload_folder = app.config.get('UPLOAD_FOLDER', 'uploads')
-    if not os.path.exists(upload_folder):
-        os.makedirs(upload_folder)
+    # Set upload folder to a writable temp directory
+    upload_folder = os.path.join('/tmp', 'uploads')
+    os.makedirs(upload_folder, exist_ok=True)
+    app.config['UPLOAD_FOLDER'] = upload_folder
 
     # Initialize extensions
     db.init_app(app)
