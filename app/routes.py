@@ -18,18 +18,18 @@ def index():
     return render_template('index.html')
 
 
-@main_routes.route('/dashboard', methods=['GET', 'POST'])
-def dashboard():
-    if 'user_id' not in session:
-        flash('Please log in to access the dashboard', 'danger')
-        return redirect(url_for('auth.login'))
 
-    user_id = session['user_id']
+# app/routes.py
+@main_routes.route('/dashboard', methods=['GET'])
+@jwt_required(locations=["cookies"])  # Specify to use cookies
+def dashboard():
+    user_id = int(get_jwt_identity())  # Convert the string user ID to an integer
     resumes = Resume.query.filter_by(user_id=user_id).all()
     user = User.query.get(user_id)
     subscription = Subscription.query.filter_by(user_id=user_id).first()
 
     return render_template('dashboard.html', resumes=resumes, user=user, subscription=subscription)
+
 
 @main_routes.route('/upload', methods=['POST'])
 def upload():
@@ -174,19 +174,15 @@ def delete_resume(resume_id):
     flash('Resume deleted successfully', 'success')
     return redirect(url_for('main.dashboard'))
 
-@main_routes.route('/logout', methods=['GET'])
-def logout():
-    session.clear()
-    flash('You have been logged out', 'success')
-    return redirect(url_for('auth.login'))
-
 
 @main_routes.route('/me')
+@jwt_required(locations=["cookies"])  # Ensure the user is authenticated via JWT
 def me():
-    if 'user_id' not in session:
-        return jsonify({"error": "Unauthorized"}), 401
+    user_id = int(get_jwt_identity())  # Retrieve user ID from the JWT token
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
 
-    user = User.query.get(session['user_id'])
     return jsonify({
         "id": user.id,
         "email": user.email,
