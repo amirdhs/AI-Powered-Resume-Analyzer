@@ -1,7 +1,8 @@
 # Resume Analyzer - AI-Powered Resume Analysis Tool
 
 A Flask web application that analyzes resumes using AI and provides feedback to help job seekers improve their applications.
-
+## Live Demo
+You can check out the live demo of the Resume Analyzer application at [Resume Analyzer Demo](https://ai-resume-analyzer-five.vercel.app/).
 ## Features
 
 - **AI-Powered Resume Analysis**: Get detailed feedback on your resume using advanced AI models  
@@ -9,13 +10,17 @@ A Flask web application that analyzes resumes using AI and provides feedback to 
 - **ATS Compatibility**: Verify if your resume can pass Applicant Tracking Systems  
 - **Resume Management**: Upload, view, and manage multiple resumes  
 - **Formatted Resume**: Get professionally formatted versions of your resume  
+- **User Authentication**: Secure login and registration system
 - **Subscription Plans**: Different plans with varied features (Free, Basic, Premium)
+- **User Dashboard**: View and manage your resumes, feedback, and subscription status
+- **Responsive Design**: Mobile-friendly interface for easy access on any device
+
 
 ## Technology Stack
 
 - **Backend**: Flask (Python)  
 - **Database**: PostgreSQL  
-- **Authentication**: Session-based authentication with bcrypt  
+- **Authentication**: JWT authentication with Flask-JWT-Extended
 - **AI Integration**: DeepSeek models via OpenRouter API  
 - **Frontend**: Bootstrap 5, HTML/CSS, JavaScript
 
@@ -52,7 +57,7 @@ A Flask web application that analyzes resumes using AI and provides feedback to 
 ### Prerequisites
 
 - Vercel account  
-- PostgreSQL database service (e.g., ElephantSQL, Supabase)
+- PostgreSQL database service (e.g., render.com, Supabase)
 
 ### Deployment Steps
 
@@ -73,18 +78,20 @@ A Flask web application that analyzes resumes using AI and provides feedback to 
 ## Project Structure
 
 ```
-├── app/
-│   ├── auth.py               # Authentication routes
-│   ├── models.py             # Database models
-│   ├── routes.py             # Main application routes
-│   ├── config.py             # Configuration settings
-│   ├── services/
-│   │   └── resume_analyzer.py  # Resume analysis logic
-│   ├── static/               # Static assets
-│   └── templates/            # HTML templates
-├── app.py                    # Application entry point
-├── requirements.txt          # Project dependencies
-└── vercel.json               # Vercel deployment configuration
+├── api/
+│   ├── app/
+│   │   ├── auth.py               # Authentication routes
+│   │   ├── models.py             # Database models
+│   │   ├── routes.py             # Main application routes
+│   │   ├── config.py             # Configuration settings
+│   │   ├── services/
+│   │   │   └── resume_analyzer.py  # Resume analysis logic
+│   │   ├── static/               # Static assets
+│   │   └── templates/            # HTML templates
+│   ├── index.py                  # Vercel entry point
+│   └── requirements.txt          # Project dependencies
+├── vercel.json                   # Vercel deployment configuration
+└── README.md                     # Project documentation
 ```
 
 ## Authentication
@@ -104,6 +111,14 @@ The application uses Flask's session-based authentication:
 - Job matching recommendations  
 - ATS compatibility analysis  
 - Skills gap identification
-```
+- Formatting suggestions
 
-Let me know if you'd like this saved as a `.md` file!
+## API Integration
+The application integrates with OpenRouter API to access DeepSeek AI models for resume analysis. This enables advanced natural language processing capabilities for providing accurate and helpful feedback on resumes.
+
+## Contributing
+1.Fork the repository
+2.Create a feature branch: git checkout -b feature-name
+3.Commit your changes: git commit -am 'Add new feature'
+4.Push to the branch: git push origin feature-name
+5.Submit a pull request
