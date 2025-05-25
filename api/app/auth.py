@@ -22,7 +22,7 @@ def register():
 
         user = User(name, email, password)
         db.session.add(user)
-        db.session.flush()  # Get the user ID before commit
+        db.session.flush()
 
         # Create subscription
         end_date = datetime.utcnow() + timedelta(days=30)  # Example: 30 days subscription
@@ -61,11 +61,11 @@ def login():
     return render_template('auth/login.html')
 
 
-# app/auth.py
+
 @auth_routes.route('/logout')
 def logout():
-    session.clear()  # Clear session data
+    session.clear()
     response = redirect(url_for('auth.login'))
-    response.delete_cookie('access_token_cookie')  # Remove JWT cookie
+    response.delete_cookie('access_token_cookie')
     flash('You have been logged out', 'success')
     return response

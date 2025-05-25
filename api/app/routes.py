@@ -19,11 +19,11 @@ def index():
 
 
 
-# app/routes.py
+
 @main_routes.route('/dashboard', methods=['GET'])
-@jwt_required(locations=["cookies"])  # Specify to use cookies
+@jwt_required(locations=["cookies"])
 def dashboard():
-    user_id = int(get_jwt_identity())  # Convert the string user ID to an integer
+    user_id = int(get_jwt_identity())
     resumes = Resume.query.filter_by(user_id=user_id).all()
     user = User.query.get(user_id)
     subscription = Subscription.query.filter_by(user_id=user_id).first()
@@ -176,9 +176,9 @@ def delete_resume(resume_id):
 
 
 @main_routes.route('/me')
-@jwt_required(locations=["cookies"])  # Ensure the user is authenticated via JWT
+@jwt_required(locations=["cookies"])
 def me():
-    user_id = int(get_jwt_identity())  # Retrieve user ID from the JWT token
+    user_id = int(get_jwt_identity())
     user = User.query.get(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
