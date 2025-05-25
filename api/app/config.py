@@ -13,7 +13,7 @@ class Config:
     PROPAGATE_EXCEPTIONS = True
 
     # Database Config
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:bIeDxt8hrE6v8KsSzRTS@database-1.cvssu4sk28zq.eu-central-1.rds.amazonaws.com:5432/postgres')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True}
 
