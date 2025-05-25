@@ -4,7 +4,7 @@ A Flask web application that analyzes resumes using AI and provides feedback to 
 
 ![AI-Powered Resume Analyzer](api/app/static/images/demo.png)
 ## Live Demo
-You can check out the live demo of the Resume Analyzer application at [Resume Analyzer Demo](https://ai-resume-analyzer-five.vercel.app/).
+You can check out the live demo of the Resume Analyzer application at [Resume Analyzer Demo](https://ai-powered-resume-analyzer-azure.vercel.app/).
 ## Features
 
 - **AI-Powered Resume Analysis**: Get detailed feedback on your resume using advanced AI models  
