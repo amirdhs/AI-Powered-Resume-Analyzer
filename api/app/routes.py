@@ -96,22 +96,27 @@ def update_subscription():
 def feedback(resume_id):
     if 'user_id' not in session:
         flash('Please log in to access this page', 'danger')
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
 
     resume = Resume.query.get_or_404(resume_id)
 
     if resume.user_id != session['user_id']:
         flash('You do not have permission to view this resume', 'danger')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('main.dashboard'))
 
-    resume = Resume.query.get_or_404(resume_id)
-    feedback = resume_analyzer.analyze_resume(resume.resume)
-    db.session.add(feedback)
+    feedback_data = resume_analyzer.analyze_resume(resume.resume)
+
+    feedback_obj = Feedback.query.filter_by(resume_id=resume.id).first()
+    if feedback_obj:
+        feedback_obj.feedback = feedback_data
+    else:
+        feedback_obj = Feedback(resume_id=resume.id, feedback=feedback_data)
+        db.session.add(feedback_obj)
+
     db.session.commit()
 
-
     flash('Feedback generated successfully', 'success')
-    return render_template('dashboard/resume_detail.html', resume=resume, feedback=feedback)
+    return render_template('dashboard/resume_detail.html', resume=resume, feedback=feedback_data)
 
 
 @main_routes.route('/check_job/<int:resume_id>', methods=['POST'])

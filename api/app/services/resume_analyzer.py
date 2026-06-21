@@ -25,10 +25,10 @@ def extract_text_from_pdf(pdf_path):
         return text
     except FileNotFoundError:
         print(f"Error: The file '{pdf_path}' was not found.")
-        exit(1)
+        return ""
     except Exception as e:
         print(f"Error extracting text from PDF: {e}")
-        exit(1)
+        return ""
 
 
 # OpenRouter API Configuration
